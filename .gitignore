@@ -1,0 +1,35 @@
+# Binarios compilados
+/bin/
+/cerebrobot
+/cerebroworker
+
+# Archivos de Go
+*.test
+*.out
+*.exe
+coverage.html
+
+# Entorno: NUNCA subir credenciales
+.env
+.env.*
+!.env.example
+config.local.yaml
+
+# Bases de datos y datos en vivo
+*.db
+*.db-journal
+*.db-wal
+*.db-shm
+/inbox/
+/mirror/
+/chroma/
+
+# Sistema
+.DS_Store
+Thumbs.db
+*.log
+
+# IDE
+.idea/
+.vscode/
+*.swp
