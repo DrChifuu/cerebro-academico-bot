@@ -14,15 +14,23 @@ coverage.html
 .env.*
 !.env.example
 config.local.yaml
+# Carpeta cuyo nombre contiene el token del bot
+tgbotapi/
 
-# Bases de datos y datos en vivo
+# Bases de datos y datos en vivo (contienen chat IDs y datos personales)
 *.db
 *.db-journal
 *.db-wal
 *.db-shm
-/inbox/
-/mirror/
-/chroma/
+db/cerebro.db
+# Archivos de clases
+inbox/
+mirror/
+chroma/
+
+# Backups y binarios locales
+gobots/bin/
+*.bak-*
 
 # Sistema
 .DS_Store
