@@ -30,7 +30,7 @@ func main() {
 	ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)
 	defer stop()
 
-	b, err := bot.New(token)
+	b, err := bot.New(token, bot.WithMiddlewares(soloChatsPermitidos(archivoChatsPermitidos)))
 	if err != nil {
 		log.Fatalf("no se pudo crear el bot: %v", err)
 	}
