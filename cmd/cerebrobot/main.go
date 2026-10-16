@@ -30,15 +30,25 @@ func main() {
 	ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)
 	defer stop()
 
-	b, err := bot.New(token, bot.WithMiddlewares(soloChatsPermitidos(archivoChatsPermitidos)))
+	b, err := bot.New(token, bot.WithMiddlewares(
+		soloChatsPermitidos(archivoChatsPermitidos),
+		registrarMensajes(archivoRegistro),
+	))
 	if err != nil {
 		log.Fatalf("no se pudo crear el bot: %v", err)
 	}
 
 	b.RegisterHandler(bot.HandlerTypeMessageText, "/start", bot.MatchTypeExact, startHandler)
+	b.RegisterHandler(bot.HandlerTypeMessageText, "/historial", bot.MatchTypeExact, historialHandler(archivoRegistro))
+	b.RegisterHandlerMatchFunc(esArchivo, acuseHandler)
 
 	log.Printf("cerebrobot %s escuchando Telegram", version)
 	b.Start(ctx)
+}
+
+var comandos = []models.BotCommand{
+	{Command: "start", Description: "Muestra el mensaje de bienvenida"},
+	{Command: "historial", Description: "Muestra los últimos 10 registros"},
 }
 
 func startHandler(ctx context.Context, b *bot.Bot, update *models.Update) {
@@ -48,5 +58,13 @@ func startHandler(ctx context.Context, b *bot.Bot, update *models.Update) {
 	})
 	if err != nil {
 		log.Printf("error enviando /start: %v", err)
+	}
+
+	_, err = b.SetMyCommands(ctx, &bot.SetMyCommandsParams{
+		Commands: comandos,
+		Scope:    &models.BotCommandScopeChat{ChatID: update.Message.Chat.ID},
+	})
+	if err != nil {
+		log.Printf("error registrando comandos: %v", err)
 	}
 }
